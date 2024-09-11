@@ -10,7 +10,7 @@ import { NavLink } from 'react-router-dom';
 
 const DashboardNavbar = () => {
     return (
-        <div className='border p-10 shadow-lg rounded-xl flex flex-col gap-10 min-h-screen bg-white'>
+        <div className='border p-10 shadow-lg rounded-xl flex flex-col gap-10  bg-white'>
             <FaPowerOff className='cursor-pointer    bg-transparent hover:bg-red-600 hover:text-white hover:p-2 hover:rounded-full  text-7xl w-fit mx-auto' />
             <NavLink to={'/'} className={"text-xl font-semibold flex items-center gap-4  text-gray-600"}><MdDashboard className='text-3xl' /> Dashboard</NavLink>
             <NavLink to={'/order'} className={"text-xl  flex items-center gap-4 font-semibold text-gray-600"}><BsCart4 className='text-3xl' />Order</NavLink>
