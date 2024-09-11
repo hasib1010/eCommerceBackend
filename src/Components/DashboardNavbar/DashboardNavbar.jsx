@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+
 import React from 'react';
 import { AiTwotoneShopping } from 'react-icons/ai';
 import { BsCart4 } from 'react-icons/bs';

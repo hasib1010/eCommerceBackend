@@ -2,27 +2,30 @@
 import React from 'react';
 import DashboardNavbar from './Components/DashboardNavbar/DashboardNavbar';
 import DashboardHeader from './Components/DashboardHeader/DashboardHeader';
-import bg from './assets/bg.jpg'
+import bg from './assets/bg.jpg';
 import { Outlet } from 'react-router-dom';
 
 const Layout = () => {
     return (
-        <div style={{ backgroundImage: `url(${bg})` }} className={`  bg-cover py-10 text-black min-h-screen`}>
-            <div className='container mx-auto my-10 p-10 bg-white/95 rounded-xl shadow-2xl shadow-yellow-300  backdrop-blur-2xl '>
-                <div className="flex gap-5 ">
-                    <DashboardNavbar></DashboardNavbar>
-                    <div className='bg-[#F8F7FC] w-full rounded-lg shadow-xl p-5'>
-                        <DashboardHeader></DashboardHeader>
-                        <Outlet></Outlet>
+        <div style={{ backgroundImage: `url(${bg})` }} className=" py-10   bg-cover bg-center min-h-screen text-black">
+            <div className="container mx-auto   px-4 lg:px-10 py-10 lg:py-12 bg-white/90 rounded-xl shadow-lg backdrop-blur-sm">
+                <div className="flex flex-col lg:flex-row gap-6">
+                    {/* Sidebar */}
+                    <div className="   top-0 lg:w-64 w-full bg-white shadow-md rounded-lg lg:rounded-none lg:border-r lg:border-gray-200 lg:overflow-y-auto p-4">
+                        <DashboardNavbar />
                     </div>
-
+                    
+                    {/* Main Content */}
+                    <div className="flex-1 bg-[#F8F7FC] p-4 lg:p-6 rounded-lg shadow-md">
+                        <DashboardHeader />
+                        <div className="mt-4">
+                            <Outlet />
+                        </div>
+                    </div>
                 </div>
-
             </div>
         </div>
-
     );
 }
-
 
 export default Layout;
