@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.active {
+  color: black;
+  font-weight: bold;
+  border: 1px solid gray;
+  width: fit-content;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+}
+.blue {
+  border-radius: 15px;
+  background: linear-gradient(99deg, #6baafc 0%, #305fec 100%);
+  box-shadow: 0px 2px 10px 0px rgba(175, 137, 255, 0.15);
+  width: 304px;
+}
+.red {
+  border-radius: 15px;
+  background: linear-gradient(99deg, #ef5e7a 0%, #d35385 100%);
+  box-shadow: 0px 2px 10px 0px rgba(175, 137, 255, 0.15);
+  width: 304px;
+}
+.pink {
+  border-radius: 15px;
+  background: linear-gradient(99deg, #d623fe 0%, #a530f2 100%);
+  box-shadow: 0px 2px 10px 0px rgba(175, 137, 255, 0.15);
+  width: 304px;
+}
