@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 
-const INITIAL_CATEGORIES = ['T-Shirts', 'Jeans', 'Jackets', 'Hats'];
-const INITIAL_SIZES = ['S', 'M', 'L', 'XL'];
-const INITIAL_COLORS = ['Red', 'Blue', 'Green', 'Black', 'White'];
-const INITIAL_BRANDS = ['Brand A', 'Brand B', 'Brand C'];
+const MySwal = withReactContent(Swal);
 
 const AddProduct = () => {
     const [formData, setFormData] = useState({
@@ -26,10 +25,10 @@ const AddProduct = () => {
         catalogImages: [],
     });
 
-    const [categories, setCategories] = useState(INITIAL_CATEGORIES);
-    const [sizes, setSizes] = useState(INITIAL_SIZES);
-    const [colors, setColors] = useState(INITIAL_COLORS);
-    const [brands, setBrands] = useState(INITIAL_BRANDS);
+    const [categories, setCategories] = useState(['T-Shirts', 'Jeans', 'Jackets', 'Hats']);
+    const [sizes, setSizes] = useState(['S', 'M', 'L', 'XL']);
+    const [colors, setColors] = useState(['Red', 'Blue', 'Green', 'Black', 'White']);
+    const [brands, setBrands] = useState(['Brand A', 'Brand B', 'Brand C']);
 
     const [newCategory, setNewCategory] = useState('');
     const [newSize, setNewSize] = useState('');
@@ -40,6 +39,8 @@ const AddProduct = () => {
     const [showSizeInput, setShowSizeInput] = useState(false);
     const [showColorInput, setShowColorInput] = useState(false);
     const [showBrandInput, setShowBrandInput] = useState(false);
+
+    const [isSubmitting, setIsSubmitting] = useState(false); // Added state for submission status
 
     const handleChange = (e) => {
         const { name, value, type, files } = e.target;
@@ -104,7 +105,7 @@ const AddProduct = () => {
             imageFormData.append('image', file);
 
             try {
-                const imageResponse = await fetch('https://api.imgbb.com/1/upload?key=82ff77cd3e7d27c63fdaf8824d1d2d3e', {
+                const imageResponse = await fetch('https://api.imgbb.com/1/upload?key=YOUR_API_KEY', {
                     method: 'POST',
                     body: imageFormData,
                 });
@@ -124,10 +125,21 @@ const AddProduct = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsSubmitting(true); // Set submitting to true
 
         const { thumbnailImage, thumbnailHoverImage, catalogImages, ...rest } = formData;
 
         try {
+            // Show loading spinner
+            MySwal.fire({
+                title: 'Uploading...',
+                text: 'Please wait while we upload your images.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    MySwal.showLoading();
+                }
+            });
+
             const imageUrls = await handleFileUpload([thumbnailImage]);
             const hoverImageUrls = await handleFileUpload([thumbnailHoverImage]);
             const catalogImageUrls = await handleFileUpload(catalogImages);
@@ -148,18 +160,43 @@ const AddProduct = () => {
             });
 
             if (response.ok) {
-                console.log('Product added successfully');
+                MySwal.fire({
+                    title: 'Success!',
+                    text: 'Product added successfully.',
+                    icon: 'success',
+                });
             } else {
-                console.error('Failed to add product');
+                MySwal.fire({
+                    title: 'Error!',
+                    text: 'Failed to add product.',
+                    icon: 'error',
+                });
             }
         } catch (error) {
-            console.error('Error:', error);
+            MySwal.fire({
+                title: 'Error!',
+                text: 'An error occurred while adding the product.',
+                icon: 'error',
+            });
+        } finally {
+            setIsSubmitting(false); // Set submitting to false after process is complete
         }
     };
+
+
 
     return (
         <div className='max-w-4xl mx-auto p-10 bg-white shadow-xl rounded-lg border border-gray-300'>
             <h2 className='text-4xl font-extrabold mb-8 text-center text-gray-800'>Add New Product</h2>
+
+            {isSubmitting && (
+                    <div className='w-full flex items-center justify-center mt-4'>
+                        <FontAwesomeIcon icon={faSpinner} className='h-6 w-6 text-blue-600 animate-spin' />
+                        <span className='ml-2 text-gray-700'>Submitting...</span>
+                    </div>
+                )}
+
+
             <form onSubmit={handleSubmit} className='space-y-8'>
                 <div className='relative'>
                     <label className='block text-lg font-semibold text-gray-700 mb-2'>Product Name</label>
