@@ -31,3 +31,17 @@
   box-shadow: 0px 2px 10px 0px rgba(175, 137, 255, 0.15);
   width: 304px;
 }
+
+
+.product-description p {
+  margin-bottom: 1em;
+}
+
+.product-description ul {
+  list-style-type: disc;
+  margin-left: 20px;
+}
+
+.product-description li {
+  margin-bottom: 0.5em;
+}

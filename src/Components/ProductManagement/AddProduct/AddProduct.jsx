@@ -105,7 +105,7 @@ const AddProduct = () => {
             imageFormData.append('image', file);
 
             try {
-                const imageResponse = await fetch('https://api.imgbb.com/1/upload?key=YOUR_API_KEY', {
+                const imageResponse = await fetch('https://api.imgbb.com/1/upload?key=82ff77cd3e7d27c63fdaf8824d1d2d3e', {
                     method: 'POST',
                     body: imageFormData,
                 });
@@ -179,7 +179,7 @@ const AddProduct = () => {
                 icon: 'error',
             });
         } finally {
-            setIsSubmitting(false); // Set submitting to false after process is complete
+            setIsSubmitting(false);  
         }
     };
 
@@ -214,12 +214,12 @@ const AddProduct = () => {
                 <div className='relative'>
                     <label className='block text-lg font-semibold text-gray-700 mb-2'>Product Description</label>
                     <textarea
-                        name='description'
+                        name='description' 
                         value={formData.description}
                         onChange={handleChange}
                         placeholder='Enter product description'
-                        className='p-4 border border-gray-300 rounded-lg w-full resize-none focus:outline-none focus:ring-2 focus:ring-blue-600 transition duration-300 ease-in-out'
-                        rows='4'
+                        className='p-4 border border-gray-300 rounded-lg w-full resize-none focus:outline-none focus:ring-2 focus:ring-blue-600 transition duration-300 ease-in-out' 
+                        rows={20}
                         required
                     />
                 </div>
