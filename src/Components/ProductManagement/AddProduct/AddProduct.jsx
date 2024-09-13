@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; // Import quill's styles
 
 const MySwal = withReactContent(Swal);
 
@@ -24,11 +26,10 @@ const AddProduct = () => {
         discountValidUntil: '',
         catalogImages: [],
     });
-
-    const [categories, setCategories] = useState(['T-Shirts', 'Jeans', 'Jackets', 'Hats']);
+    const [categories,  ] = useState(['T-Shirts', 'Jeans', 'Jackets', 'Hats']);
     const [sizes, setSizes] = useState(['S', 'M', 'L', 'XL']);
     const [colors, setColors] = useState(['Red', 'Blue', 'Green', 'Black', 'White']);
-    const [brands, setBrands] = useState(['Brand A', 'Brand B', 'Brand C']);
+    const [brands, setBrands] = useState(['FabyOh', 'Addidas', 'Gucci', "Armani"]);
 
     const [newCategory, setNewCategory] = useState('');
     const [newSize, setNewSize] = useState('');
@@ -40,24 +41,17 @@ const AddProduct = () => {
     const [showColorInput, setShowColorInput] = useState(false);
     const [showBrandInput, setShowBrandInput] = useState(false);
 
-    const [isSubmitting, setIsSubmitting] = useState(false); // Added state for submission status
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const quillRef = useRef();
 
     const handleChange = (e) => {
         const { name, value, type, files } = e.target;
 
-        if (type === 'checkbox') {
-            setFormData(prevData => {
-                const updatedValues = prevData[name].includes(value)
-                    ? prevData[name].filter(item => item !== value)
-                    : [...prevData[name], value];
-
-                return { ...prevData, [name]: updatedValues };
-            });
-        } else if (type === 'file') {
+        if (type === 'file') {
             if (name === 'catalogImages') {
                 setFormData(prevData => ({
                     ...prevData,
-                    catalogImages: [...files]
+                    catalogImages: [...files],
                 }));
             } else {
                 setFormData(prevData => ({
@@ -66,71 +60,44 @@ const AddProduct = () => {
                 }));
             }
         } else {
-            setFormData({
-                ...formData,
+            setFormData(prevData => ({
+                ...prevData,
                 [name]: value,
-            });
+            }));
         }
     };
 
-    const handleAddPreset = (type, newValue) => {
-        if (newValue.trim() === '') return;
-
-        switch (type) {
-            case 'category':
-                setCategories(prev => [...prev, newValue]);
-                setNewCategory('');
-                break;
-            case 'size':
-                setSizes(prev => [...prev, newValue]);
-                setNewSize('');
-                break;
-            case 'color':
-                setColors(prev => [...prev, newValue]);
-                setNewColor('');
-                break;
-            case 'brand':
-                setBrands(prev => [...prev, newValue]);
-                setNewBrand('');
-                break;
-            default:
-                break;
-        }
+    const handleEditorChange = (value) => {
+        setFormData(prevData => ({
+            ...prevData,
+            description: value,
+        }));
     };
 
-    const handleFileUpload = async (files) => {
-        const imageUrls = [];
-        for (const file of files) {
-            const imageFormData = new FormData();
-            imageFormData.append('image', file);
+    const handleImageUpload = async (file) => {
+        const formData = new FormData();
+        formData.append('image', file);
 
-            try {
-                const imageResponse = await fetch('https://api.imgbb.com/1/upload?key=82ff77cd3e7d27c63fdaf8824d1d2d3e', {
-                    method: 'POST',
-                    body: imageFormData,
-                });
+        const response = await fetch('https://api.imgbb.com/1/upload?key=82ff77cd3e7d27c63fdaf8824d1d2d3e', {
+            method: 'POST',
+            body: formData,
+        });
 
-                if (!imageResponse.ok) {
-                    throw new Error('Image upload failed');
-                }
-
-                const imageResult = await imageResponse.json();
-                imageUrls.push(imageResult.data.url);
-            } catch (error) {
-                console.error('Error uploading image:', error);
-            }
+        if (!response.ok) {
+            throw new Error('Image upload failed');
         }
-        return imageUrls;
+
+        const result = await response.json();
+        return result.data.url;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsSubmitting(true); // Set submitting to true
+        setIsSubmitting(true);
 
         const { thumbnailImage, thumbnailHoverImage, catalogImages, ...rest } = formData;
 
         try {
-            // Show loading spinner
             MySwal.fire({
                 title: 'Uploading...',
                 text: 'Please wait while we upload your images.',
@@ -140,14 +107,17 @@ const AddProduct = () => {
                 }
             });
 
-            const imageUrls = await handleFileUpload([thumbnailImage]);
-            const hoverImageUrls = await handleFileUpload([thumbnailHoverImage]);
-            const catalogImageUrls = await handleFileUpload(catalogImages);
+            const thumbnailImageUrl = thumbnailImage ? await handleImageUpload(thumbnailImage) : '';
+            const hoverImageUrl = thumbnailHoverImage ? await handleImageUpload(thumbnailHoverImage) : '';
+
+            const catalogImageUrls = await Promise.all(
+                Array.from(catalogImages).map(file => handleImageUpload(file))
+            );
 
             const dataToSubmit = {
                 ...rest,
-                thumbnailImage: imageUrls[0] || '',
-                hoverImageUrl: hoverImageUrls[0] || '',
+                thumbnailImage: thumbnailImageUrl,
+                hoverImageUrl: hoverImageUrl,
                 catalogImages: catalogImageUrls,
             };
 
@@ -179,23 +149,20 @@ const AddProduct = () => {
                 icon: 'error',
             });
         } finally {
-            setIsSubmitting(false);  
+            setIsSubmitting(false);
         }
     };
-
-
 
     return (
         <div className='max-w-4xl mx-auto p-10 bg-white shadow-xl rounded-lg border border-gray-300'>
             <h2 className='text-4xl font-extrabold mb-8 text-center text-gray-800'>Add New Product</h2>
 
             {isSubmitting && (
-                    <div className='w-full flex items-center justify-center mt-4'>
-                        <FontAwesomeIcon icon={faSpinner} className='h-6 w-6 text-blue-600 animate-spin' />
-                        <span className='ml-2 text-gray-700'>Submitting...</span>
-                    </div>
-                )}
-
+                <div className='w-full flex items-center justify-center mt-4'>
+                    <FontAwesomeIcon icon={faSpinner} className='h-6 w-6 text-blue-600 animate-spin' />
+                    <span className='ml-2 text-gray-700'>Submitting...</span>
+                </div>
+            )}
 
             <form onSubmit={handleSubmit} className='space-y-8'>
                 <div className='relative'>
@@ -213,14 +180,12 @@ const AddProduct = () => {
 
                 <div className='relative'>
                     <label className='block text-lg font-semibold text-gray-700 mb-2'>Product Description</label>
-                    <textarea
-                        name='description' 
+                    <ReactQuill
+                        ref={quillRef}
                         value={formData.description}
-                        onChange={handleChange}
-                        placeholder='Enter product description'
-                        className='p-4 border border-gray-300 rounded-lg w-full resize-none focus:outline-none focus:ring-2 focus:ring-blue-600 transition duration-300 ease-in-out' 
-                        rows={20}
-                        required
+                        onChange={handleEditorChange}
+                        className='border border-gray-300 rounded-lg w-full'
+                        theme='snow'
                     />
                 </div>
 
@@ -555,13 +520,15 @@ const AddProduct = () => {
 
                 <button
                     type='submit'
-                    className='w-full px-4 py-2 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition duration-300 ease-in-out'
+                    className='px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out'
+                    disabled={isSubmitting}
                 >
-                    Add Product
+                    {isSubmitting ? 'Submitting...' : 'Add Product'}
                 </button>
             </form>
         </div>
     );
 };
+
 
 export default AddProduct;
