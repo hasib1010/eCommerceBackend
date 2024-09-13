@@ -4,7 +4,7 @@ import withReactContent from 'sweetalert2-react-content';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
 import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css'; // Import quill's styles
+import 'react-quill/dist/quill.snow.css';
 
 const MySwal = withReactContent(Swal);
 
