@@ -8,7 +8,7 @@ import { Outlet } from 'react-router-dom';
 const Layout = () => {
     return (
         <div style={{ backgroundImage: `url(${bg})` }} className=" py-10   bg-cover bg-center min-h-screen text-black">
-            <div className="container mx-auto   px-4 lg:px-10 py-10 lg:py-12 bg-white/90 rounded-xl shadow-lg backdrop-blur-sm">
+            <div className="   px-4 lg:px-10 py-10 lg:py-12 bg-white/90 rounded-xl shadow-lg backdrop-blur-sm">
                 <div className="flex flex-col lg:flex-row gap-6">
                     {/* Sidebar */}
                     <div className="   top-0 lg:w-64 w-full bg-white shadow-md rounded-lg lg:rounded-none lg:border-r lg:border-gray-200 lg:overflow-y-auto p-4">

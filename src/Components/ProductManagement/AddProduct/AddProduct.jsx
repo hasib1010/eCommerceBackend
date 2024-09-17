@@ -26,10 +26,10 @@ const AddProduct = () => {
         discountValidUntil: '',
         catalogImages: [],
     });
-    const [categories,  ] = useState(['T-Shirts', 'Jeans', 'Jackets', 'Hats']);
-    const [sizes, setSizes] = useState(['S', 'M', 'L', 'XL']);
-    const [colors, setColors] = useState(['Red', 'Blue', 'Green', 'Black', 'White']);
-    const [brands, setBrands] = useState(['FabyOh', 'Addidas', 'Gucci', "Armani"]);
+    const [categories,] = useState(['T-Shirts', 'Jeans', 'Jackets', 'Hats']);
+    const [sizes, setSizes] = useState(['S', 'M', 'L', 'XL', "XXL"]);
+    const [colors, setColors] = useState(['Red', 'Blue', 'Green', 'Black', 'White', "Purple"]);
+    const [brands, setBrands] = useState(['FabYoh', 'Adidas', 'Gucci', "Armani"]);
 
     const [newCategory, setNewCategory] = useState('');
     const [newSize, setNewSize] = useState('');

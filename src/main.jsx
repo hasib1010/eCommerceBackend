@@ -12,6 +12,7 @@ import Products from './Components/ProductManagement/Products';
 // import ManageDiscounts from './Components/ProductManagement/ManageDiscounts';
 import './index.css';
 import AddProduct from './Components/ProductManagement/AddProduct/AddProduct';
+import Orders from './Components/Orders/Orders';
 
 const router = createBrowserRouter([
   {
@@ -56,7 +57,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/order",
-        element: <h2>Order</h2>,
+        element: <Orders></Orders>
       },
       {
         path: "/shipping",
