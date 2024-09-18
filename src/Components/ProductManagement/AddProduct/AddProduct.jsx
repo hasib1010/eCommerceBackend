@@ -26,7 +26,7 @@ const AddProduct = () => {
         discountValidUntil: '',
         catalogImages: [],
     });
-    const [categories,] = useState(['T-Shirts', 'Jeans', 'Jackets', 'Hats']);
+    const [categories, setCategories] = useState(['T-Shirts', 'Jeans', 'Jackets', 'Hats']);
     const [sizes, setSizes] = useState(['S', 'M', 'L', 'XL', "XXL"]);
     const [colors, setColors] = useState(['Red', 'Blue', 'Green', 'Black', 'White', "Purple"]);
     const [brands, setBrands] = useState(['FabYoh', 'Adidas', 'Gucci', "Armani"]);
@@ -44,8 +44,44 @@ const AddProduct = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const quillRef = useRef();
 
+    const handleAddPreset = (type, value) => {
+        if (value.trim() === '') {
+            MySwal.fire({
+                title: 'Error!',
+                text: 'Please enter a valid value.',
+                icon: 'error',
+            });
+            return;
+        }
+
+        switch (type) {
+            case 'category':
+                setCategories(prevCategories => [...prevCategories, value]);
+                setFormData(prevData => ({
+                    ...prevData,
+                    category: value,
+                }));
+                setNewCategory('');
+                break;
+            case 'size':
+                setSizes(prevSizes => [...prevSizes, value]);
+                setNewSize('');
+                break;
+            case 'color':
+                setColors(prevColors => [...prevColors, value]);
+                setNewColor('');
+                break;
+            case 'brand':
+                setBrands(prevBrands => [...prevBrands, value]);
+                setNewBrand('');
+                break;
+            default:
+                break;
+        }
+    };
+
     const handleChange = (e) => {
-        const { name, value, type, files } = e.target;
+        const { name, value, type, files, checked } = e.target;
 
         if (type === 'file') {
             if (name === 'catalogImages') {
@@ -57,6 +93,27 @@ const AddProduct = () => {
                 setFormData(prevData => ({
                     ...prevData,
                     [name]: files[0],
+                }));
+            }
+        } else if (type === 'checkbox') {
+            const isChecked = checked;
+            const updateArray = (array) => {
+                if (isChecked) {
+                    return [...array, value];
+                } else {
+                    return array.filter(item => item !== value);
+                }
+            };
+
+            if (name === 'sizes') {
+                setFormData(prevData => ({
+                    ...prevData,
+                    sizes: updateArray(prevData.sizes),
+                }));
+            } else if (name === 'colors') {
+                setFormData(prevData => ({
+                    ...prevData,
+                    colors: updateArray(prevData.colors),
                 }));
             }
         } else {
@@ -213,14 +270,9 @@ const AddProduct = () => {
                                 }`}
                         >
                             {showCategoryInput ? (
-                                <>
-                                    <FontAwesomeIcon icon={faTimes} className='h-5 w-5 ' />
-
-                                </>
+                                <FontAwesomeIcon icon={faTimes} className='h-5 w-5 ' />
                             ) : (
-                                <>
-                                    <FontAwesomeIcon icon={faPlus} className='h-5 w-5  ' />
-                                </>
+                                <FontAwesomeIcon icon={faPlus} className='h-5 w-5 ' />
                             )}
                         </button>
                     </div>
@@ -230,13 +282,13 @@ const AddProduct = () => {
                                 type='text'
                                 value={newCategory}
                                 onChange={(e) => setNewCategory(e.target.value)}
-                                placeholder='Add new category'
-                                className='p-3 border border-gray-300 rounded-lg w-full'
+                                placeholder='New category'
+                                className='p-4 border border-gray-300 rounded-lg w-full'
                             />
                             <button
                                 type='button'
                                 onClick={() => handleAddPreset('category', newCategory)}
-                                className='bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700 transition duration-300 ease-in-out'
+                                className='px-4 py-2 bg-green-600 text-white rounded-lg'
                             >
                                 Add
                             </button>
@@ -264,50 +316,44 @@ const AddProduct = () => {
                         name='stock'
                         value={formData.stock}
                         onChange={handleChange}
-                        placeholder='Enter stock quantity'
+                        placeholder='Enter product stock'
                         className='p-4 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-600 transition duration-300 ease-in-out'
                         required
                     />
                 </div>
 
-
                 <div className='relative'>
-                    <label className='block text-lg font-semibold text-gray-700 mb-2'>Available Sizes</label>
-                    <div className='flex items-center gap-7'>
-                        <div className='flex flex-wrap gap-4 '>
-                            {sizes.map(size => (
-                                <label key={size} className='inline-flex items-center cursor-pointer'>
-                                    <input
-                                        type='checkbox'
-                                        name='sizes'
-                                        value={size}
-                                        checked={formData.sizes.includes(size)}
-                                        onChange={handleChange}
-                                        className='form-checkbox text-blue-500 transition duration-200 ease-in-out'
-                                    />
-                                    <span className='ml-2 text-gray-800'>{size}</span>
-                                </label>
-                            ))}
-                        </div>
-                        <button
-                            type='button'
-                            onClick={() => setShowSizeInput(prev => !prev)}
-                            className={`flex items-center px-4 py-2 rounded-lg shadow-md transition duration-300 ease-in-out ${showSizeInput
-                                ? 'bg-red-600 text-white hover:bg-red-700'
-                                : 'bg-orange-600 text-white hover:bg-blue-700'
-                                }`}
-                        >
-                            {showSizeInput ? (
-                                <>
-                                    <FontAwesomeIcon icon={faTimes} className='h-5 w-5 ' />
-
-                                </>
-                            ) : (
-                                <>
-                                    <FontAwesomeIcon icon={faPlus} className='h-5 w-5  ' />
-                                </>
-                            )}
-                        </button>
+                    <label className='block text-lg font-semibold text-gray-700 mb-2'>Sizes</label>
+                    <div className="flex justify-between">
+                    <div className='flex flex-wrap gap-4'>
+                        {sizes.map(size => (
+                            <label key={size} className='inline-flex items-center cursor-pointer'>
+                                <input
+                                    type='checkbox'
+                                    name='sizes'
+                                    value={size}
+                                    checked={formData.sizes.includes(size)}
+                                    onChange={handleChange}
+                                    className='form-checkbox text-blue-500 transition duration-200 ease-in-out'
+                                />
+                                <span className='ml-2 text-gray-800'>{size}</span>
+                            </label>
+                        ))}
+                    </div>
+                    <button
+                        type='button'
+                        onClick={() => setShowSizeInput(prev => !prev)}
+                        className={`flex items-center px-4 py-2 rounded-lg shadow-md transition duration-300 ease-in-out ${showSizeInput
+                            ? 'bg-red-600 text-white hover:bg-red-700'
+                            : 'bg-orange-600 text-white hover:bg-blue-700'
+                            }`}
+                    >
+                        {showSizeInput ? (
+                            <FontAwesomeIcon icon={faTimes} className='h-5 w-5 ' />
+                        ) : (
+                            <FontAwesomeIcon icon={faPlus} className='h-5 w-5 ' />
+                        )}
+                    </button>
                     </div>
                     {showSizeInput && (
                         <div className='flex items-center gap-2 mt-2'>
@@ -315,13 +361,13 @@ const AddProduct = () => {
                                 type='text'
                                 value={newSize}
                                 onChange={(e) => setNewSize(e.target.value)}
-                                placeholder='Add new size'
-                                className='p-3 border border-gray-300 rounded-lg w-full'
+                                placeholder='New size'
+                                className='p-4 border border-gray-300 rounded-lg w-full'
                             />
                             <button
                                 type='button'
                                 onClick={() => handleAddPreset('size', newSize)}
-                                className='bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700 transition duration-300 ease-in-out'
+                                className='px-4 py-2 bg-green-600 text-white rounded-lg'
                             >
                                 Add
                             </button>
@@ -329,10 +375,9 @@ const AddProduct = () => {
                     )}
                 </div>
 
-
                 <div className='relative'>
-                    <label className='block text-lg font-semibold text-gray-700 mb-2'>Available Colors</label>
-                    <div className='flex items-center gap-2'>
+                    <label className='block text-lg font-semibold text-gray-700 mb-2'>Colors</label>
+                    <div className='flex justify-between'>
                         <div className='flex flex-wrap gap-4'>
                             {colors.map(color => (
                                 <label key={color} className='inline-flex items-center cursor-pointer'>
@@ -357,14 +402,9 @@ const AddProduct = () => {
                                 }`}
                         >
                             {showColorInput ? (
-                                <>
-                                    <FontAwesomeIcon icon={faTimes} className='h-5 w-5 ' />
-
-                                </>
+                                <FontAwesomeIcon icon={faTimes} className='h-5 w-5 ' />
                             ) : (
-                                <>
-                                    <FontAwesomeIcon icon={faPlus} className='h-5 w-5  ' />
-                                </>
+                                <FontAwesomeIcon icon={faPlus} className='h-5 w-5 ' />
                             )}
                         </button>
                     </div>
@@ -374,19 +414,33 @@ const AddProduct = () => {
                                 type='text'
                                 value={newColor}
                                 onChange={(e) => setNewColor(e.target.value)}
-                                placeholder='Add new color'
-                                className='p-3 border border-gray-300 rounded-lg w-full'
+                                placeholder='New color'
+                                className='p-4 border border-gray-300 rounded-lg w-full'
                             />
                             <button
                                 type='button'
                                 onClick={() => handleAddPreset('color', newColor)}
-                                className='bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700 transition duration-300 ease-in-out'
+                                className='px-4 py-2 bg-green-600 text-white rounded-lg'
                             >
                                 Add
                             </button>
                         </div>
                     )}
                 </div>
+
+                <div className='relative'>
+                    <label className='block text-lg font-semibold text-gray-700 mb-2'>Material</label>
+                    <input
+                        type='text'
+                        name='material'
+                        value={formData.material}
+                        onChange={handleChange}
+                        placeholder='Enter material'
+                        className='p-4 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-600 transition duration-300 ease-in-out'
+                    />
+                </div>
+
+
 
                 <div className='relative'>
                     <label className='block text-lg font-semibold text-gray-700 mb-2'>Available Brands</label>

@@ -110,6 +110,20 @@ const Products = () => {
                     </button>
                 </Link>
             </div>
+
+            {/* Add Featured Products Card */}
+            <div className='w-[250px] bg-white shadow-lg rounded-lg flex flex-col items-center p-5 border'>
+                <h3 className='text-lg font-bold mb-4 flex items-center'>
+                    <PlusIcon className='h-6 w-6 text-blue-500 mr-2' />
+                    Add Featured Products
+                </h3>
+                <p className='text-gray-500'>Highlight specific products by adding them as featured.</p>
+                <Link to="/products/featured/add">
+                    <button className='mt-5 px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600'>
+                        Add Featured
+                    </button>
+                </Link>
+            </div>
         </div>
     );
 };

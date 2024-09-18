@@ -52,8 +52,7 @@ const Orders = () => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-
-            // Update local state with the new status
+ 
             setOrders(prevOrders =>
                 prevOrders.map(order =>
                     order._id === orderId ? { ...order, status: newStatus } : order
@@ -65,46 +64,62 @@ const Orders = () => {
     };
 
     return (
-        <div className='max-w-screen-2xl overflow-scroll'>
-            <h1>All Orders</h1>
-            <table className="min-w-full divide-y divide-gray-200">
-                <thead>
+        <div className='container overflow-scroll'>
+            <h1 className='text-3xl font-bold mb-5'>All Orders</h1>
+            <table className="container divide-y divide-gray-200">
+                <thead className='border-2 border-black'>
                     <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order Id</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Size</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Color</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Transaction ID</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Shipping Address</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thumbnail</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Change Status</th>
+                        <th className="px-6 py-3  text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Index</th>
+                        <th className="px-6 py-3  text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Order Id</th>
+                        <th className="px-6 py-3  text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Confirmed At</th>
+                        <th className="px-6 py-3  text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                        <th className="px-6 py-3  text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Size</th>
+                        <th className="px-6 py-3  text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Color</th>
+                        <th className="px-6 py-3  text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                        <th className="px-6 py-3  text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                        <th className="px-6 py-3  text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th className="px-6 py-3  text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Transaction ID</th>
+                        <th className="px-6 py-3  text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Shipping Address</th>
+                        <th className="px-6 py-3  text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Contact Number</th>
+                        <th className="px-6 py-3  text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Thumbnail</th>
+                        <th className="px-6 py-3  text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Change Status</th>
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                    {orders.map((order, index) => {
-                        const product = productsMap[order._id]; // Ensure _id is used for product ID
+                    {orders.slice().reverse().map((order, index) => {  
+                        const product = productsMap[order._id]; 
+                        const formatDate = (dateString) => {
+                            const options = {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit',
+                                hour12: false
+                            };
+                            return new Date(dateString).toLocaleString(undefined, options);
+                        };
                         return (
-                            <tr key={index}>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{order._id}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.items.map(i => <p>{i.name} <br /></p>)}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.items.map(i => <p>{i.size} <br /></p>)}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.items.map(i => <p>{i.color} <br /></p>)}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${order.price.toFixed(2)}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.quantity}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.status}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.transactionId}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.shippingAddress}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <div className='flex flex-wrap'>
-                                            {
-                                                order.items.map(i => <img className='h-14' src={i.thumbnailImage} />)
-                                            }
-                                        </div>
+                            <tr className={`${order.status === "pending" ? "bg-slate-200 text-black font-bold" : ""} ${order.status === "delivered" ? "bg-green-200 text-black font-bold" : ""} ${order.status === "shipped" ? "bg-blue-200 text-black font-bold" : ""}${order.status === "cancelled" ? "bg-red-200 text-black font-bold" : ""} border-black border-2`} key={index}>
+                                <td className="px-6 border-2 font-bold border-black py-4 text-center whitespace-nowrap text-xl">{orders.length - index}</td> {/* Adjust index display */}
+                                <td className="px-6 border-2 border-black py-4 text-center whitespace-nowrap text-sm font-medium">{order._id}</td>
+                                <td className="px-6 border-2 border-black py-4 text-center whitespace-nowrap text-sm font-medium"> {order?.confirmedAt ? formatDate(order.confirmedAt) : "No date Available"}</td>
+                                <td className="px-6 border-2 border-black py-4 text-center whitespace-nowrap text-sm">{order.items.map(i => <p key={i._id}>{i.name} <br /></p>)}</td>
+                                <td className="px-6 border-2 border-black py-4 text-center whitespace-nowrap text-sm">{order.items.map(i => <p key={i._id}>{i.size} <br /></p>)}</td>
+                                <td className="px-6 border-2 border-black py-4 text-center whitespace-nowrap text-sm">{order.items.map(i => <p key={i._id}>{i.color} <br /></p>)}</td>
+                                <td className="px-6 border-2 border-black py-4 text-center whitespace-nowrap text-sm ">${order.price.toFixed(2)}</td>
+                                <td className="px-6 border-2 border-black py-4 text-center whitespace-nowrap text-sm">{order.quantity}</td>
+                                <td className={`${order.status === "pending" ? "bg-slate-800 text-white font-bold" : ""} ${order.status === "delivered" ? "bg-green-600 text-white font-bold" : ""} ${order.status === "shipped" ? "bg-blue-800 text-white font-bold" : ""}${order.status === "cancelled" ? "bg-red-600 text-white font-bold" : ""} uppercase px-6 border-2 border-black py-4 text-center whitespace-nowrap text-sm`}>{order.status}</td>
+                                <td className="px-6 border-2 border-black py-4 text-center whitespace-nowrap text-sm">{order.transactionId}</td>
+                                <td className="px-6 border-2 border-black py-4 text-center whitespace-nowrap text-sm">{order.shippingAddress}</td>
+                                <td className="px-6 border-2 border-black py-4 text-center whitespace-nowrap text-sm">{order.phoneNumber}</td>
+                                <td className="px-6 border-2 border-black py-4 text-center whitespace-nowrap text-sm">
+                                    <div className='flex flex-col gap-2 items-center justify-center'>
+                                        {order.items.map(i => <img key={i._id} className='h-14' src={i.thumbnailImage} alt={i.name} />)}
+                                    </div>
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <td className="px-6 border-black border-2 py-4 whitespace-nowrap text-sm text-gray-500">
                                     <select
                                         value={order.status}
                                         onChange={(e) => handleStatusChange(order._id, e.target.value, order.user._id)} // Pass user ID

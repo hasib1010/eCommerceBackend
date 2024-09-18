@@ -13,6 +13,8 @@ import Products from './Components/ProductManagement/Products';
 import './index.css';
 import AddProduct from './Components/ProductManagement/AddProduct/AddProduct';
 import Orders from './Components/Orders/Orders';
+import Customers from './Components/Dashboard/Customers/Customers';
+import AddFeaturedProducts from './Components/ProductManagement/FeaturedProducts/AddFeaturedProducts';
 
 const router = createBrowserRouter([
   {
@@ -56,8 +58,16 @@ const router = createBrowserRouter([
         // element: <ManageDiscounts />,
       },
       {
+        path: "/products/featured/add",
+        element:  <AddFeaturedProducts></AddFeaturedProducts>,
+      },
+      {
         path: "/order",
         element: <Orders></Orders>
+      },
+      {
+        path: "/customers",
+        element:<Customers></Customers>
       },
       {
         path: "/shipping",
