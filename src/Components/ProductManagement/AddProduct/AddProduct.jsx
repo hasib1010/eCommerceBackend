@@ -178,7 +178,7 @@ const AddProduct = () => {
                 catalogImages: catalogImageUrls,
             };
 
-            const response = await fetch('https://e-commerce-server-alpha.vercel.app/products/clothings', {
+            const response = await fetch('http://localhost:3000/products/clothings', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

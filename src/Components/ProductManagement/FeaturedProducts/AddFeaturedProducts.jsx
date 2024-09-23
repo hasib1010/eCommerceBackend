@@ -11,7 +11,7 @@ const AddFeaturedProducts = () => {
  
     const fetchCategories = async () => {
         try {
-            const response = await fetch('https://e-commerce-server-alpha.vercel.app/products/clothings/categories');
+            const response = await fetch('http://localhost:3000/products/clothings/categories');
             if (!response.ok) {
                 throw new Error('Failed to fetch categories');
             }
@@ -29,7 +29,7 @@ const AddFeaturedProducts = () => {
     };
 
     const fetchProducts = async (category) => {
-        const url = `https://e-commerce-server-alpha.vercel.app/products/clothings?category=${category}`;
+        const url = `http://localhost:3000/products/clothings?category=${category}`;
 
         try {
             const response = await fetch(url);
@@ -46,7 +46,7 @@ const AddFeaturedProducts = () => {
     const addToFeatured = async (productId) => {
         setLoading(true);
         try {
-            const response = await fetch(`https://e-commerce-server-alpha.vercel.app/products/clothings/${productId}/featured`, {
+            const response = await fetch(`http://localhost:3000/products/clothings/${productId}/featured`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ const AddFeaturedProducts = () => {
     const removeFromFeatured = async (productId) => {
         setLoading(true);
         try {
-            const response = await fetch(`https://e-commerce-server-alpha.vercel.app/products/clothings/${productId}/featured`, {
+            const response = await fetch(`http://localhost:3000/products/clothings/${productId}/featured`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
