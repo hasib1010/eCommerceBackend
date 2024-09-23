@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react';
 
 const Customers = () => {
     const [customers, setCustomers] = useState([]);
-    const [orders, setOrders] = useState([]); // Ensure this is initialized as an array
+    const [orders, setOrders] = useState([]); 
 
     useEffect(() => {
         // Fetch users
-        fetch("http://localhost:3000/users")
+        fetch("https://e-commerce-server-alpha.vercel.app/users")
             .then(res => res.json())
             .then(data => setCustomers(data))
             .catch(err => console.error("Error fetching users:", err));
 
         // Fetch orders
-        fetch("http://localhost:3000/admin/orders")
+        fetch("https://e-commerce-server-alpha.vercel.app/admin/orders")
             .then(res => res.json())
             .then(data => setOrders(data))
             .catch(err => console.error("Error fetching orders:", err));
@@ -47,9 +47,9 @@ const Customers = () => {
             <div className='grid grid-cols-2 gap-3 mt-10'>
                 {
                     customers.map(user => {
-                        const totalSpent = calculateTotalSpent(user._id);  
+                        const totalSpent = calculateTotalSpent(user.uid);  
                         return (
-                            <div className='border w-full shadow-md rounded-md flex flex-col p-3' key={user._id}>
+                            <div className='border w-full shadow-md rounded-md flex flex-col p-3' key={user.uid}>
                                 <span className='font-bold'>Name</span>
                                 <h2 className='text-xl'>{user.firstName} {user.lastName}</h2>
 

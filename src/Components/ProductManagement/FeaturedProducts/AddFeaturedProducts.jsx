@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2'; 
 
 const AddFeaturedProducts = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState(''); 
-    const [categories, setCategories] = useState([]);
 
-    // Fetch categories when the component mounts
+    const [categories, setCategories] = useState([]);
+ 
     const fetchCategories = async () => {
         try {
-            const response = await fetch('http://localhost:3000/products/clothings/categories');
+            const response = await fetch('https://e-commerce-server-alpha.vercel.app/products/clothings/categories');
             if (!response.ok) {
                 throw new Error('Failed to fetch categories');
             }
             const result = await response.json();
             setCategories(result.categories || []);
             if (result.categories.length > 0) {
-                setSelectedCategory(result.categories[0]); // Set default category to the first one
-                fetchProducts(result.categories[0]); // Fetch products for the default category
+                setSelectedCategory(result.categories[0]); 
+                fetchProducts(result.categories[0]); 
             }
         } catch (error) {
             setError(error.message);
@@ -29,7 +29,7 @@ const AddFeaturedProducts = () => {
     };
 
     const fetchProducts = async (category) => {
-        const url = `http://localhost:3000/products/clothings?category=${category}`;
+        const url = `https://e-commerce-server-alpha.vercel.app/products/clothings?category=${category}`;
 
         try {
             const response = await fetch(url);
@@ -46,7 +46,7 @@ const AddFeaturedProducts = () => {
     const addToFeatured = async (productId) => {
         setLoading(true);
         try {
-            const response = await fetch(`http://localhost:3000/products/clothings/${productId}/featured`, {
+            const response = await fetch(`https://e-commerce-server-alpha.vercel.app/products/clothings/${productId}/featured`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const AddFeaturedProducts = () => {
                 throw new Error('Failed to add product to featured');
             }
 
-            const result = await response.json();
+            const result = await response.json(); 
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',
@@ -79,7 +79,7 @@ const AddFeaturedProducts = () => {
     const removeFromFeatured = async (productId) => {
         setLoading(true);
         try {
-            const response = await fetch(`http://localhost:3000/products/clothings/${productId}/featured`, {
+            const response = await fetch(`https://e-commerce-server-alpha.vercel.app/products/clothings/${productId}/featured`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ const AddFeaturedProducts = () => {
     };
 
     useEffect(() => {
-        fetchCategories(); // Fetch categories on mount
+        fetchCategories();  
     }, []);
 
     if (loading) {
@@ -131,7 +131,7 @@ const AddFeaturedProducts = () => {
     }
 
     return (
-        <div className='p-5'>
+        <div className='p-5'> 
             <h2 className='text-2xl mb-4'>Manage Featured Products</h2>
             <div className="mb-4">
                 {categories.map((category) => (
