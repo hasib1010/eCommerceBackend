@@ -14,8 +14,8 @@ import './index.css';
 import AddProduct from './Components/ProductManagement/AddProduct/AddProduct';
 import Orders from './Components/Orders/Orders';
 import Customers from './Components/Dashboard/Customers/Customers';
-import AddFeaturedProducts from './Components/ProductManagement/FeaturedProducts/AddFeaturedProducts';
-
+import AddFeaturedProducts from './Components/ProductManagement/FeaturedProducts/AddFeaturedProducts';  
+import TrendingProducts from './Components/ProductManagement/Trending/TrendingProducts';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -60,6 +60,10 @@ const router = createBrowserRouter([
       {
         path: "/products/featured/add",
         element:  <AddFeaturedProducts></AddFeaturedProducts>,
+      },
+      {
+        path: "/products/trending/manage",
+        element:   <TrendingProducts></TrendingProducts>
       },
       {
         path: "/order",

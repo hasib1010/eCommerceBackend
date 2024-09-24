@@ -124,6 +124,20 @@ const Products = () => {
                     </button>
                 </Link>
             </div>
+
+            {/* Manage Trending Products Card */}
+            <div className='w-[250px] bg-white shadow-lg rounded-lg flex flex-col items-center p-5 border'>
+                <h3 className='text-lg font-bold mb-4 flex items-center'>
+                    <TagIcon className='h-6 w-6 text-orange-500 mr-2' />
+                    Manage Trending Products
+                </h3>
+                <p className='text-gray-500'>Highlight specific products by marking them as trending.</p>
+                <Link to="/products/trending/manage">
+                    <button className='mt-5 px-4 py-2 bg-orange-500 text-white rounded-lg shadow hover:bg-orange-600'>
+                        Manage Trending
+                    </button>
+                </Link>
+            </div>
         </div>
     );
 };
