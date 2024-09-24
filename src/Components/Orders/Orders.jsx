@@ -7,7 +7,7 @@ const Orders = () => {
     useEffect(() => {
         async function fetchOrders() {
             try {
-                const response = await fetch('http://localhost:3000/admin/orders');
+                const response = await fetch('https://e-commerce-server-alpha.vercel.app/admin/orders');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -16,7 +16,7 @@ const Orders = () => {
 
                 const productIds = [...new Set(data.map(order => order._id))];
                 const productRequests = productIds.map(id =>
-                    fetch(`http://localhost:3000/products/clothings/${id}`).then(res => res.json())
+                    fetch(`https://e-commerce-server-alpha.vercel.app/products/clothings/${id}`).then(res => res.json())
                 );
                 const products = await Promise.all(productRequests);
 
@@ -36,7 +36,7 @@ const Orders = () => {
 
     const handleStatusChange = async (orderId, newStatus, userId) => {
         try {
-            const response = await fetch(`http://localhost:3000/admin/orders/${orderId}/status`, {
+            const response = await fetch(`https://e-commerce-server-alpha.vercel.app/admin/orders/${orderId}/status`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

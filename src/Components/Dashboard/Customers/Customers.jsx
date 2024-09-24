@@ -6,13 +6,13 @@ const Customers = () => {
 
     useEffect(() => {
         // Fetch users
-        fetch("http://localhost:3000/users")
+        fetch("https://e-commerce-server-alpha.vercel.app/users")
             .then(res => res.json())
             .then(data => setCustomers(data))
             .catch(err => console.error("Error fetching users:", err));
 
         // Fetch orders
-        fetch("http://localhost:3000/admin/orders")
+        fetch("https://e-commerce-server-alpha.vercel.app/admin/orders")
             .then(res => res.json())
             .then(data => setOrders(data))
             .catch(err => console.error("Error fetching orders:", err));
