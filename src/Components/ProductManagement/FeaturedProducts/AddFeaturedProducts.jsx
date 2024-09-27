@@ -46,7 +46,7 @@ const AddFeaturedProducts = () => {
     const addToFeatured = async (productId) => {
         setLoading(true);
         try {
-            const response = await fetch(`https://e-commerce-server-alpha.vercel.app/products/clothings/${productId}/featured`, {
+            const response = await fetch(`http://localhost:3000/products/clothings/${productId}/featured`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ const AddFeaturedProducts = () => {
     const removeFromFeatured = async (productId) => {
         setLoading(true);
         try {
-            const response = await fetch(`https://e-commerce-server-alpha.vercel.app/products/clothings/${productId}/featured`, {
+            const response = await fetch(`http://localhost:3000/products/clothings/${productId}/featured`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -99,6 +99,8 @@ const AddFeaturedProducts = () => {
             });
             fetchProducts(selectedCategory);
         } catch (error) {
+            console.log(error);
+            
             Swal.fire({
                 icon: 'error',
                 title: 'Error!',

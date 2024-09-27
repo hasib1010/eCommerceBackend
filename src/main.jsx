@@ -4,18 +4,14 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Layout from './Layout';
 import Dashboard from './Components/Dashboard/Dashboard';
 import Products from './Components/ProductManagement/Products'; 
-// import UpdateProduct from './Components/ProductManagement/UpdateProduct';
-// import DeleteProduct from './Components/ProductManagement/DeleteProduct';
-// import ViewProduct from './Components/ProductManagement/ViewProduct';
-// import ManageInventory from './Components/ProductManagement/ManageInventory';
-// import BulkUpdate from './Components/ProductManagement/BulkUpdate';
-// import ManageDiscounts from './Components/ProductManagement/ManageDiscounts';
+import UpdateProduct from './Components/ProductManagement/UpdateProducts/UpdateProducts';
 import './index.css';
 import AddProduct from './Components/ProductManagement/AddProduct/AddProduct';
 import Orders from './Components/Orders/Orders';
 import Customers from './Components/Dashboard/Customers/Customers';
 import AddFeaturedProducts from './Components/ProductManagement/FeaturedProducts/AddFeaturedProducts';  
 import TrendingProducts from './Components/ProductManagement/Trending/TrendingProducts';
+import UpdateForm from './Components/ProductManagement/UpdateProducts/UpdateForm';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -35,7 +31,12 @@ const router = createBrowserRouter([
       },
       {
         path: "/products/update",
-        // element: <UpdateProduct />,
+        element: <UpdateProduct></UpdateProduct> ,
+      },
+      {
+        path: "/products/update/:id",
+        element: <UpdateForm></UpdateForm>
+      
       },
       {
         path: "/products/delete",
