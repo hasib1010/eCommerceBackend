@@ -14,7 +14,7 @@ const UpdateForm = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/products/clothings/${id}`);
+        const response = await axios.get(`https://e-commerce-server-alpha.vercel.app/products/clothings/${id}`);
         setProduct(response.data);
       } catch (err) {
         setError('Error fetching product');
@@ -42,7 +42,7 @@ const UpdateForm = () => {
         description: sanitizeHtml(product.description),
       };
 
-      await axios.put(`http://localhost:3000/products/clothings/${id}`, updatedProduct);
+      await axios.put(`https://e-commerce-server-alpha.vercel.app/products/clothings/${id}`, updatedProduct);
       navigate('/products'); // Redirect after successful update
     } catch (err) {
          console.log(err);
@@ -53,7 +53,7 @@ const UpdateForm = () => {
 
   const handleDeleteVariant = async (variantId) => {
     try {
-      const response = await axios.delete(`http://localhost:3000/products/clothings/${product._id}/variants/${variantId}`);
+      const response = await axios.delete(`https://e-commerce-server-alpha.vercel.app/products/clothings/${product._id}/variants/${variantId}`);
       setProduct(response.data); 
     } catch (error) { 
       console.log(error);
@@ -64,7 +64,7 @@ const UpdateForm = () => {
   const handleAddVariant = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://localhost:3000/products/clothings/${product._id}/variants`, newVariant);
+      const response = await axios.post(`https://e-commerce-server-alpha.vercel.app/products/clothings/${product._id}/variants`, newVariant);
       setProduct(response.data); 
       setNewVariant({ size: '', color: '', stock: 1 }); // Reset new variant form
     } catch (error) {

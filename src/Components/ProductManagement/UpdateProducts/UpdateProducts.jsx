@@ -10,7 +10,7 @@ const UpdateProduct = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/products/clothings');
+                const response = await axios.get('https://e-commerce-server-alpha.vercel.app/products/clothings');
                 setProducts(response.data.products);
             } catch (err) {
                 setError('Error fetching products');
