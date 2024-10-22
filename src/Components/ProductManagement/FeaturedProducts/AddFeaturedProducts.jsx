@@ -1,45 +1,42 @@
 import React, { useState, useEffect } from 'react';
-import Swal from 'sweetalert2'; 
+import Swal from 'sweetalert2';
 
 const AddFeaturedProducts = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [selectedCategory, setSelectedCategory] = useState(''); 
-
+    const [selectedCategory, setSelectedCategory] = useState('');
     const [categories, setCategories] = useState([]);
- 
-    const fetchCategories = async () => {
-        try {
-            const response = await fetch('https://e-commerce-server-alpha.vercel.app/products/clothings/categories');
-            if (!response.ok) {
-                throw new Error('Failed to fetch categories');
-            }
-            const result = await response.json();
-            setCategories(result.categories || []);
-            if (result.categories.length > 0) {
-                setSelectedCategory(result.categories[0]); 
-                fetchProducts(result.categories[0]); 
-            }
-        } catch (error) {
-            setError(error.message);
-        } finally {
-            setLoading(false);
-        }
-    };
+
+    // const fetchCategories = async () => {
+    //     try {
+    //         const response = await fetch('https://e-commerce-server-alpha.vercel.app/products/clothings/categories');
+    //         if (!response.ok) throw new Error('Failed to fetch categories');
+    //         const result = await response.json();
+    //         setCategories(result.categories || []);
+    //         if (result.categories.length > 0) {
+    //             setSelectedCategory(result.categories[0]); 
+    //             await fetchProducts(result.categories[0]); // Fetch products for the default category
+    //         }
+    //     } catch (error) {
+    //         setError(error.message);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
     const fetchProducts = async (category) => {
-        const url = `https://e-commerce-server-alpha.vercel.app/products/clothings?category=${category}`;
-
+        const url = `https://e-commerce-server-alpha.vercel.app/products/clothings`;
+        setLoading(true);
         try {
             const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error('Failed to fetch products');
-            }
+            if (!response.ok) throw new Error('Failed to fetch products');
             const result = await response.json();
             setProducts(result.products || []);
         } catch (error) {
             setError(error.message);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -54,17 +51,14 @@ const AddFeaturedProducts = () => {
                 body: JSON.stringify({ isFeatured: true }),
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to add product to featured');
-            }
-
-            const result = await response.json(); 
+            if (!response.ok) throw new Error('Failed to add product to featured');
+            const result = await response.json();
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',
                 text: `Successfully added ${result.name} to featured products!`,
             });
-            fetchProducts(selectedCategory);
+            fetchProducts(selectedCategory); // Refresh products
         } catch (error) {
             Swal.fire({
                 icon: 'error',
@@ -87,20 +81,15 @@ const AddFeaturedProducts = () => {
                 body: JSON.stringify({ isFeatured: false }),
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to remove product from featured');
-            }
-
+            if (!response.ok) throw new Error('Failed to remove product from featured');
             const result = await response.json();
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',
                 text: `Successfully removed ${result.name} from featured products!`,
             });
-            fetchProducts(selectedCategory);
+            fetchProducts(selectedCategory); // Refresh products
         } catch (error) {
-            console.log(error);
-            
             Swal.fire({
                 icon: 'error',
                 title: 'Error!',
@@ -111,14 +100,14 @@ const AddFeaturedProducts = () => {
         }
     };
 
-    const handleCategoryChange = (category) => {
-        setSelectedCategory(category);
-        fetchProducts(category);
-    };
+    // const handleCategoryChange = (category) => {
+    //     setSelectedCategory(category);
+    //     fetchProducts(category); // Fetch products for the selected category
+    // };
 
-    useEffect(() => {
-        fetchCategories();  
-    }, []);
+    // useEffect(() => {
+    //     fetchCategories();  
+    // }, []);
 
     if (loading) {
         return (
@@ -133,13 +122,13 @@ const AddFeaturedProducts = () => {
     }
 
     return (
-        <div className='p-5'> 
+        <div className='p-5'>
             <h2 className='text-2xl mb-4'>Manage Featured Products</h2>
             <div className="mb-4">
                 {categories.map((category) => (
-                    <button 
-                        key={category} 
-                        onClick={() => handleCategoryChange(category)} 
+                    <button
+                        key={category}
+                        onClick={() => handleCategoryChange(category)}
                         className='mr-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600'>
                         {category}
                     </button>
@@ -150,7 +139,6 @@ const AddFeaturedProducts = () => {
                     <div key={product._id} className='border border-gray-300 rounded p-4'>
                         <h3 className='font-bold'>{product.name}</h3>
                         <img src={product.thumbnailImage} alt={product.name} className='w-full mb-2' />
-
                         {product.isFeatured ? (
                             <button
                                 onClick={() => removeFromFeatured(product._id)}

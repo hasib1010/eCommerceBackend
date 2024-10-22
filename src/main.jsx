@@ -12,6 +12,7 @@ import Customers from './Components/Dashboard/Customers/Customers';
 import AddFeaturedProducts from './Components/ProductManagement/FeaturedProducts/AddFeaturedProducts';  
 import TrendingProducts from './Components/ProductManagement/Trending/TrendingProducts';
 import UpdateForm from './Components/ProductManagement/UpdateProducts/UpdateForm';
+import DeleteProduct from './Components/ProductManagement/DeleteProduct/DeleteProduct';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -40,7 +41,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/products/delete",
-        // element: <DeleteProduct />,
+        element: <DeleteProduct />,
       },
       {
         path: "/products/view",
